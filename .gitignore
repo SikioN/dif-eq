@@ -1,11 +1,14 @@
-.DS_Store
-.idea/
-__pycache__/
-*.aux
-*.log
-*.out
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-*.synctex(busy)
-scan_res.txt
+# Ignore everything by default
+*
+
+# Allow traversing directories
+!*/
+
+# Whitelist ONLY required files
+!.gitignore
+!syl.tex
+!iHW/**
+!lab/lab_1_numerical_method.ipynb
+!lab/lab_2_liner_stab.ipynb
+!lab/lab_3_chaos_crypto.ipynb
+!lab/lab_4_static_optimization.ipynb
