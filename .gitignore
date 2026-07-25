@@ -6,6 +6,7 @@
 
 # Whitelist ONLY required files and folders
 !.gitignore
+!README.md
 !syl.tex
 !iHW/
 !iHW/**
