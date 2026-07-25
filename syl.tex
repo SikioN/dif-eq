@@ -43,30 +43,29 @@
 \begin{document}
 
 \begin{center}
-    {\LARGE\textbf{Силлабус курса «Дифференциальные уравнения»}}\\[0.3em]
+    {\LARGE\textbf{Дифференциальные уравнения}}\\[0.3em]
     {\large Двухсеместровый профильно-адаптированный курс для бакалавриата Университета ИТМО}\\[0.3em]
-    {\normalsize\textbf{Автор курса:} Муравья Никита Романович -- ассистент, Институт Математики ИТМО}\\[0.3em]
-    {\small Официальный репозиторий курса: \href{https://github.com/SikioN/dif-eq}{https://github.com/SikioN/dif-eq}}\\[0.4em]
+    {\normalsize\textbf{Автор курса:} Муравья Никита Романович -- ассистент, Институт Математики ИТМО}\\[0.4em]
 \end{center}
 
 \begin{greenblock}
-\textbf{Цель курса:} изучение методов решения дифференциальных уравнений, теорем существования и единственности, качественной теории устойчивости, теории хаоса и вариационного исчисления. Курс рассчитан на 2 семестра и ориентирован на формирование практических вычислительных навыков на Python с индивидуальной адаптацией лабораторных работ под образовательные программы бакалавриата Университета ИТМО.
+\textbf{Цель курса:} изучение методов решения дифференциальных уравнений, теорем существования и единственности, качественной теории устойчивости, теории хаоса и вариационного исчисления. Курс рассчитан на 2 семестра и ориентирован на формирование практических вычислительных навыков на Python с индивидуальной адаптацией лабораторных работ под образовательные программы бакалавриата.
 \end{greenblock}
 
 \begin{greenblock}
 \textbf{Методические принципы и адаптируемость курса под программы подготовки бакалавров:}
 \begin{itemize}[nosep, leftmargin=1.2em]
-    \item \textbf{Профилирование лабораторных работ:} контекст практических заданий адаптируется под специфику конкретного направления подготовки ИТМО без снижения фундаментального математического уровня.
+    \item \textbf{Профилирование лабораторных работ:} контекст практических заданий адаптируется под специфику конкретного направления подготовки бакалавров без снижения фундаментального математического уровня.
     \item \textbf{Интерактивные Jupyter Notebooks:} лабораторный практикум выложен в открытый доступ на GitHub (\href{https://github.com/SikioN/dif-eq}{SikioN/dif-eq}) в виде электронных блокнотов Python, служащих базовой стартовой платформой для профильной адаптации.
     \item \textbf{Аудиторный формат практикума:} лабораторные работы выполняются непосредственно на семинарских занятиях под контролем преподавателя.
-    \item \textbf{Python-верификация:} каждое задание сопровождается эталонным кодом (SciPy, SymPy, Matplotlib) для численно-графической самопроверки.
+    \item \textbf{Python-верификация:} каждое задание сопровождается эталонным кодом для численно-графической самопроверки.
 \end{itemize}
 \end{greenblock}
 
-\section*{Матрица адаптации лабораторного практикума по направлениям ИТМО}\label{sec:matrix}
+\section*{Матрица адаптации лабораторного практикума по направлениям}\label{sec:matrix}
 
 \begin{greenblock}
-Ниже представлена сводная матрица соответствия официальных направлений подготовки бакалавриата Университета ИТМО и профильных модулей лабораторных работ. Подробные математические постановки приведены в \hyperref[app:A]{\textbf{Приложении А}}.
+Ниже представлена сводная матрица соответствия направлений подготовки бакалавриата и профильных модулей лабораторных работ. Подробные математические постановки приведены в \hyperref[app:A]{\textbf{Приложении А}}.
 \end{greenblock}
 
 \vspace{0.3em}
@@ -74,7 +73,7 @@
 \small
 \begin{tabularx}{\textwidth}{|p{4.5cm}|X|X|}
 \hline
-\textbf{Направление подготовки бакалавриата ИТМО} & \textbf{Семестр 1: Лабораторные №1--2} & \textbf{Семестр 2: Лабораторные №3--4} \\
+\textbf{Направление подготовки бакалавриата} & \textbf{Семестр 1: Лабораторные №1--2} & \textbf{Семестр 2: Лабораторные №3--4} \\
 \hline
 \textbf{Мехатроника и робототехника} & Расчет динамики звеньев манипулятора и линеаризация роторного маятника & Вариационная оптимизация траектории робота на сложной поверхности \\
 \hline
@@ -155,7 +154,7 @@
 
 \subsection*{А.1. Лабораторная работа №1. Численные методы ОДУ первого порядка}\label{app:A1}
 \textit{Базовое задание:} Реализация методов Эйлера $\psi(t_{k+1}) = \psi(t_k) + h_k f(t_k, \psi(t_k))$ и Рунге--Кутты 2-го порядка для задачи Коши $x'(t) = f(t, x(t)), x(t_0) = x_0$.\\[0.2em]
-\textbf{Базовый Jupyter Notebook (на GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_1_numerical_method.ipynb}{\texttt{lab\_1\_numerical\_method.ipynb}}
+\textbf{Базовый блокнот (GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_1_numerical_method.ipynb}{\texttt{lab\_1\_numerical\_method.ipynb}}
 
 \begin{itemize}[nosep]
     \item \textbf{Мехатроника и робототехника:} Численный расчет переходных процессов скорости электропривода колесного робота.
@@ -168,7 +167,7 @@
 
 \subsection*{А.2. Лабораторная работа №2. Линеаризация и фазовые портреты}\label{app:A2}
 \textit{Базовое задание:} Вычисление матрицы Якоби $J(x^*)$, линеаризация нелинейных систем в окрестности точек покоя, построение фазовых портретов.\\[0.2em]
-\textbf{Базовый Jupyter Notebook (на GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_2_liner_stab.ipynb}{\texttt{lab\_2\_liner\_stab.ipynb}}
+\textbf{Базовый блокнот (GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_2_liner_stab.ipynb}{\texttt{lab\_2\_liner\_stab.ipynb}}
 
 \begin{itemize}[nosep]
     \item \textbf{Мехатроника и робототехника:} Динамика роторного маятника $\ddot{\theta} + \gamma\dot{\theta} + \omega_0^2\sin\theta = 0$. Анализ точек покоя $(0, 0)$ (устойчивый фокус) и $(\pi, 0)$ (седло), построение фазового портрета в плоскости $(\theta, \dot{\theta})$.
@@ -181,7 +180,7 @@
 
 \subsection*{А.3. Лабораторная работа №3. Теория хаоса и функции Ляпунова}\label{app:A3}
 \textit{Базовое задание:} Исследование нелинейных динамических систем, функций Ляпунова и чувствительности к начальным условиям.\\[0.2em]
-\textbf{Профильный Jupyter Notebook (Информационная безопасность, на GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_3_chaos_crypto.ipynb}{\texttt{lab\_3\_chaos\_crypto.ipynb}}
+\textbf{Профильный блокнот (ИнфоБез, GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_3_chaos_crypto.ipynb}{\texttt{lab\_3\_chaos\_crypto.ipynb}}
 
 \begin{itemize}[nosep]
     \item \textbf{Информационная безопасность:} Моделирование аттрактора Лоренца $\dot{x} = \sigma(y-x), \; \dot{y} = x(\rho-z)-y, \; \dot{z} = xy-\beta z$ и системы реакция--диффузия $u_t = D u_{xx} + u - u^3$. Проверка асимптотической устойчивости через функцию Ляпунова $V(u) = \frac{D}{2}\int (u_x)^2 dx + \frac{1}{4}\int (1-u^2)^2 dx$. Генерация 256-битного ключа (SHA-256) и побитовое XOR-шифрование $C_i = P_i \oplus K_i$.
@@ -194,7 +193,7 @@
 
 \subsection*{А.4. Лабораторная работа №4. Вариационное исчисление и оптимизация}\label{app:A4}
 \textit{Базовое задание:} Формализация вариационных задач, сведение к уравнениям Эйлера--Лагранжа, дискретизация и численный поиск экстремалей.\\[0.2em]
-\textbf{Профильный Jupyter Notebook (Мехатроника и робототехника, на GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_4_static_optimization.ipynb}{\texttt{lab\_4\_static\_optimization.ipynb}}
+\textbf{Профильный блокнот (Робототехника, GitHub):} \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_4_static_optimization.ipynb}{\texttt{lab\_4\_static\_optimization.ipynb}}
 
 \begin{itemize}[nosep]
     \item \textbf{Мехатроника и робототехника:} Оптимизация траектории робота $y(x)$ на рельефе $z = h(x, y)$ путем минимизации функционала стоимости движения $\mathcal{J}[y] = \int_{a}^{b} (A + B |\nabla h|) \sqrt{1 + (y')^2} dx + C \int_{a}^{b} (y'')^2 dx \to \min$ методом градиентного спуска.
@@ -261,12 +260,11 @@
 \subsection*{Вычислительные методы, ИИ и открытые репозитории}
 \begin{enumerate}[nosep, leftmargin=1.8em]
     \item \textbf{Chen R. T. Q., Rubanova Y., Bettencourt J., Duvenaud D. K.} Neural Ordinary Differential Equations // Advances in Neural Information Processing Systems (NeurIPS). — 2018. — Vol. 31. — \href{https://arxiv.org/abs/1806.07366}{arXiv:1806.07366}.
-    \item \textbf{Официальный GitHub-репозиторий учебного курса}: \href{https://github.com/SikioN/dif-eq}{https://github.com/SikioN/dif-eq}
-    \item \textbf{Базовая Лабораторная работа №1 (Jupyter Notebook)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_1_numerical_method.ipynb}{lab\_1\_numerical\_method.ipynb}
-    \item \textbf{Базовая Лабораторная работа №2 (Jupyter Notebook)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_2_liner_stab.ipynb}{lab\_2\_liner\_stab.ipynb}
-    \item \textbf{Профильная Лабораторная работа №3 (Информационная безопасность, Jupyter Notebook)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_3_chaos_crypto.ipynb}{lab\_3\_chaos\_crypto.ipynb}
-    \item \textbf{Профильная Лабораторная работа №4 (Мехатроника и робототехника, Jupyter Notebook)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_4_static_optimization.ipynb}{lab\_4\_static\_optimization.ipynb}
-    \item \textbf{Официальный образовательный портал Университета ИТМО}: \href{https://abit.itmo.ru/}{https://abit.itmo.ru/}
+    \item \textbf{Официальный GitHub-репозиторий курса}: \href{https://github.com/SikioN/dif-eq}{https://github.com/SikioN/dif-eq}
+    \item \textbf{Базовый блокнот №1}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_1_numerical_method.ipynb}{\texttt{lab\_1\_numerical\_method.ipynb}}
+    \item \textbf{Базовый блокнот №2}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_2_liner_stab.ipynb}{\texttt{lab\_2\_liner\_stab.ipynb}}
+    \item \textbf{Профильный блокнот №3 (ИнфоБез)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_3_chaos_crypto.ipynb}{\texttt{lab\_3\_chaos\_crypto.ipynb}}
+    \item \textbf{Профильный блокнот №4 (Робототехника)}: \href{https://github.com/SikioN/dif-eq/blob/main/lab/lab_4_static_optimization.ipynb}{\texttt{lab\_4\_static\_optimization.ipynb}}
 \end{enumerate}
 
 \end{document}
