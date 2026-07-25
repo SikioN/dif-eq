@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+__pycache__/
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+scan_res.txt
