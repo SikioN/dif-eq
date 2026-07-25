@@ -4,11 +4,22 @@
 # Allow traversing directories
 !*/
 
-# Whitelist ONLY required files
+# Whitelist ONLY required files and folders
 !.gitignore
 !syl.tex
+!iHW/
 !iHW/**
+!lab/
 !lab/lab_1_numerical_method.ipynb
 !lab/lab_2_liner_stab.ipynb
 !lab/lab_3_chaos_crypto.ipynb
 !lab/lab_4_static_optimization.ipynb
+
+# Exclude temporary latex/system files inside iHW
+iHW/**/*.aux
+iHW/**/*.log
+iHW/**/*.fls
+iHW/**/*.fdb_latexmk
+iHW/**/*.synctex.gz
+.DS_Store
+*.DS_Store
