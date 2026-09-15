@@ -1,7 +1,10 @@
 # dif-eq/tools/verify.py
 from dataclasses import dataclass, field
 
+import numpy as np
 import sympy as sp
+from pydantic import ValidationError
+from scipy.integrate import solve_ivp
 
 from prompts.schema import GeneratedProblem, EquilibriumSpec
 
@@ -101,3 +104,65 @@ def check_equilibria(problem: GeneratedProblem) -> VerificationResult:
             )
 
     return VerificationResult(accepted=not reasons, reasons=reasons)
+
+
+_STABLE_TYPES = {"stable_node", "stable_focus", "center"}
+
+
+def _reference_equilibrium(problem: GeneratedProblem) -> EquilibriumSpec:
+    """Pick an equilibrium to perturb around for the boundedness check.
+
+    Perturbing near a saddle/unstable point makes the trajectory diverge
+    for physical reasons that have nothing to do with the numerical
+    scheme's own stability — so prefer a stable/center equilibrium when
+    the problem has one, and only fall back to the first equilibrium
+    (which may be unstable) if none is available.
+    """
+    for equilibrium in problem.expected_equilibria:
+        if equilibrium.type in _STABLE_TYPES:
+            return equilibrium
+    return problem.expected_equilibria[0]
+
+
+def check_numerical_stability(
+    problem: GeneratedProblem,
+    step: float = 0.01,
+    t_max: float = 50.0,
+    bound: float = 1e6,
+    reference: EquilibriumSpec | None = None,
+) -> VerificationResult:
+    var_syms, eqs = parsed_equations(problem)
+    rhs = sp.lambdify(var_syms, eqs, modules="numpy")
+
+    def ode(_t, y):
+        return np.array(rhs(*y), dtype=float)
+
+    reference = reference or problem.expected_equilibria[0]
+    y0 = [c + 0.01 for c in reference.point]
+    t_eval = np.arange(0, t_max, step)
+
+    solution = solve_ivp(ode, (0, t_max), y0, t_eval=t_eval, method="RK45", rtol=1e-6, atol=1e-9)
+
+    reasons: list[str] = []
+    if not solution.success:
+        reasons.append(f"integration failed: {solution.message}")
+    elif np.any(~np.isfinite(solution.y)):
+        reasons.append("solution contains NaN/Inf — scheme diverged")
+    elif np.max(np.abs(solution.y)) > bound:
+        reasons.append(f"solution exceeded bound {bound} — likely unstable at step {step}")
+
+    return VerificationResult(accepted=not reasons, reasons=reasons)
+
+
+def verify(raw_json: dict) -> VerificationResult:
+    try:
+        problem = GeneratedProblem.model_validate(raw_json)
+    except ValidationError as exc:
+        return VerificationResult(accepted=False, reasons=[f"schema validation failed: {exc}"])
+
+    checks = [
+        check_equilibria(problem),
+        check_numerical_stability(problem, reference=_reference_equilibrium(problem)),
+    ]
+    all_reasons = [reason for result in checks for reason in result.reasons]
+    return VerificationResult(accepted=all(result.accepted for result in checks), reasons=all_reasons)

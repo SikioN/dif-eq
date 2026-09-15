@@ -1,6 +1,6 @@
 # dif-eq/tools/tests/test_verify.py
 from prompts.schema import GeneratedProblem
-from verify import check_equilibria
+from verify import check_equilibria, check_numerical_stability, verify
 
 GOODWIN_PROBLEM = {
     "track": "business_informatics",
@@ -90,3 +90,47 @@ def test_parametric_solution_rejected_not_crashed():
     result = check_equilibria(problem)
     assert not result.accepted
     assert any("non-concrete" in r or "parametric" in r for r in result.reasons)
+
+
+STABLE_SYSTEM = {
+    "track": "business_informatics",
+    "lab_number": 2,
+    "title": "стабильная линейная система",
+    "system": {
+        "variables": ["x", "y"],
+        "equations": ["-x", "-y"],
+        "parameters": {},
+    },
+    "expected_equilibria": [{"point": [0.0, 0.0], "type": "stable_node"}],
+    "narrative": "test fixture",
+}
+
+UNSTABLE_SYSTEM = {
+    **STABLE_SYSTEM,
+    "system": {"variables": ["x", "y"], "equations": ["x", "y"], "parameters": {}},
+    "expected_equilibria": [{"point": [0.0, 0.0], "type": "unstable_node"}],
+}
+
+
+def test_bounded_trajectory_accepted():
+    problem = GeneratedProblem.model_validate(STABLE_SYSTEM)
+    result = check_numerical_stability(problem)
+    assert result.accepted, result.reasons
+
+
+def test_diverging_trajectory_rejected():
+    problem = GeneratedProblem.model_validate(UNSTABLE_SYSTEM)
+    result = check_numerical_stability(problem, t_max=30.0, bound=1e6)
+    assert not result.accepted
+    assert any("exceeded bound" in r for r in result.reasons)
+
+
+def test_verify_rejects_invalid_schema():
+    result = verify({"track": "not_a_real_track"})
+    assert not result.accepted
+    assert any("schema" in r for r in result.reasons)
+
+
+def test_verify_accepts_correct_problem():
+    result = verify(GOODWIN_PROBLEM)
+    assert result.accepted, result.reasons
