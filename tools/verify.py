@@ -68,18 +68,32 @@ def check_equilibria(problem: GeneratedProblem) -> VerificationResult:
         )
         return VerificationResult(accepted=False, reasons=reasons)
 
-    found_points = [tuple(sol[v] for v in var_syms) for sol in solutions]
+    found_points = []
+    for sol in solutions:
+        if any(v not in sol or sol[v].free_symbols for v in var_syms):
+            reasons.append(
+                "solver returned a non-concrete (parametric) equilibrium — cannot verify"
+            )
+            return VerificationResult(accepted=False, reasons=reasons)
+        found_points.append(tuple(sol[v] for v in var_syms))
 
+    matched_indices: set[int] = set()
     for expected in problem.expected_equilibria:
         target = tuple(sp.nsimplify(c) for c in expected.point)
-        match = next(
-            (p for p in found_points if all(sp.simplify(a - b) == 0 for a, b in zip(p, target))),
+        match_index = next(
+            (
+                i
+                for i, p in enumerate(found_points)
+                if i not in matched_indices
+                and all(sp.simplify(a - b) == 0 for a, b in zip(p, target))
+            ),
             None,
         )
-        if match is None:
+        if match_index is None:
             reasons.append(f"expected equilibrium at {expected.point} not found")
             continue
-        actual_type = classify_point(var_syms, eqs, match)
+        matched_indices.add(match_index)
+        actual_type = classify_point(var_syms, eqs, found_points[match_index])
         if actual_type != expected.type:
             reasons.append(
                 f"equilibrium {expected.point}: expected type '{expected.type}', "

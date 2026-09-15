@@ -48,3 +48,45 @@ def test_wrong_equilibrium_count_rejected():
     result = check_equilibria(problem)
     assert not result.accepted
     assert any("expected 1" in r for r in result.reasons)
+
+
+def test_duplicate_expected_point_not_double_matched():
+    # Both expected entries point at the same actual equilibrium (0,0). The
+    # second entry must not silently reuse the first match -- it should come
+    # back as "not found", since there is only one (0,0) equilibrium to match
+    # and the real second equilibrium (1,1) then goes unclaimed.
+    bad = {
+        **GOODWIN_PROBLEM,
+        "expected_equilibria": [
+            {"point": [0.0, 0.0], "type": "saddle"},
+            {"point": [0.0, 0.0], "type": "saddle"},
+        ],
+    }
+    problem = GeneratedProblem.model_validate(bad)
+    result = check_equilibria(problem)
+    assert not result.accepted
+    assert any("not found" in r for r in result.reasons)
+
+
+def test_parametric_solution_rejected_not_crashed():
+    # variables=[x, y] but the system is degenerate: "0" is trivially true for
+    # any x, and "-y" pins y=0. sp.solve returns a single solution dict {y: 0}
+    # with no concrete value for x (a continuum of equilibria along the
+    # x-axis), which must be rejected with a clear reason rather than raising
+    # KeyError when building found_points.
+    degenerate = {
+        "track": "business_informatics",
+        "lab_number": 2,
+        "title": "Degenerate system",
+        "system": {
+            "variables": ["x", "y"],
+            "equations": ["0", "-y"],
+            "parameters": {},
+        },
+        "expected_equilibria": [{"point": [0.0, 0.0], "type": "saddle"}],
+        "narrative": "test fixture",
+    }
+    problem = GeneratedProblem.model_validate(degenerate)
+    result = check_equilibria(problem)
+    assert not result.accepted
+    assert any("non-concrete" in r or "parametric" in r for r in result.reasons)
