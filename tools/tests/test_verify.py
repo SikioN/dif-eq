@@ -134,3 +134,48 @@ def test_verify_rejects_invalid_schema():
 def test_verify_accepts_correct_problem():
     result = verify(GOODWIN_PROBLEM)
     assert result.accepted, result.reasons
+
+
+# The Goodwin fixture above is a conservative (Hamiltonian) system: even
+# perturbing near its "wrong" saddle equilibrium at (0,0) stays bounded
+# (closed orbits everywhere in the positive quadrant), so it cannot by
+# itself prove _reference_equilibrium is doing useful work. This fixture's
+# two equilibria genuinely differ in divergence behavior: perturbing near
+# (1,0) (a real saddle -- Jacobian eigenvalues (2,-1)) sends x into a
+# finite-time Riccati-type blowup, while perturbing near (-1,0) (a real
+# stable node -- eigenvalues (-2,-1)) stays bounded.
+DIVERGENT_FIRST_PROBLEM = {
+    "track": "business_informatics",
+    "lab_number": 2,
+    "title": "regression fixture for reference-equilibrium selection",
+    "system": {
+        "variables": ["x", "y"],
+        "equations": ["x**2 - 1", "-y"],
+        "parameters": {},
+    },
+    "expected_equilibria": [
+        {"point": [1.0, 0.0], "type": "saddle"},
+        {"point": [-1.0, 0.0], "type": "stable_node"},
+    ],
+    "narrative": "test fixture",
+}
+
+
+def test_verify_picks_stable_reference_over_divergent_first_equilibrium():
+    # verify() must use _reference_equilibrium to perturb near (-1,0), the
+    # stable_node, not blindly near expected_equilibria[0] = (1,0), the
+    # saddle -- otherwise this correct, correctly-classified problem would
+    # be wrongly rejected on a spurious numerical-stability failure.
+    result = verify(DIVERGENT_FIRST_PROBLEM)
+    assert result.accepted, result.reasons
+
+
+def test_wrong_reference_would_have_rejected_divergent_first_problem():
+    # Simulates what verify() would do if _reference_equilibrium did not
+    # exist (or were broken) and it blindly used expected_equilibria[0]:
+    # forcing the saddle at (1,0) as the reference perturbs to x~1.01,
+    # which is firmly in the x>1 region where dx/dt = x**2-1 accelerates
+    # without bound (finite-time blowup), so the integrator must reject it.
+    problem = GeneratedProblem.model_validate(DIVERGENT_FIRST_PROBLEM)
+    result = check_numerical_stability(problem, reference=problem.expected_equilibria[0])
+    assert not result.accepted, result.reasons
