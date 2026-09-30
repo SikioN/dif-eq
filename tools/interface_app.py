@@ -7,12 +7,12 @@ from run_validation_batch import MATH_CORE_BY_LAB
 from verify import verify
 
 TRACK_LABELS = {
-    "🤖 Мехатроника и робототехника": "mechatronics",
-    "🔐 Информационная безопасность": "infosec",
-    "📐 Прикладная математика и информатика": "applied_math",
-    "🧠 Программная инженерия (Нейротехнологии)": "software_eng_neuro",
-    "📱 Прикладная информатика (Мобильные технологии)": "applied_informatics_mobile",
-    "📈 Бизнес-информатика": "business_informatics",
+    "Мехатроника и робототехника": "mechatronics",
+    "Информационная безопасность": "infosec",
+    "Прикладная математика и информатика": "applied_math",
+    "Программная инженерия (Нейротехнологии)": "software_eng_neuro",
+    "Прикладная информатика (Мобильные технологии)": "applied_informatics_mobile",
+    "Бизнес-информатика": "business_informatics",
 }
 
 EQUILIBRIUM_TYPE_RU = {
@@ -25,28 +25,48 @@ EQUILIBRIUM_TYPE_RU = {
     "degenerate": "вырожденная",
 }
 
-st.set_page_config(page_title="МатКонтекст", page_icon="🧮", layout="wide")
+st.set_page_config(page_title="МатКонтекст", page_icon=":material/calculate:", layout="wide")
 
-st.title("🧮 МатКонтекст")
-st.caption(
-    "Промпт-шаблон направления → LLM (Yandex AI Studio) → "
-    "автоматическая верификация (SymPy/SciPy) → приёмка преподавателем"
+st.markdown(
+    """
+    <style>
+    .block-container { max-width: 880px; padding-top: 3rem; }
+    h1 { font-weight: 600; letter-spacing: -0.02em; }
+    [data-testid="stSidebar"] { border-right: 1px solid #E3E3E6; }
+    blockquote {
+        border-left: 2px solid #2F3A4C;
+        padding-left: 1rem;
+        color: #4A4A4A;
+        font-style: normal;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.title("МатКонтекст")
+st.write(
+    "Генератор профильных учебных задач для курса «Дифференциальные уравнения». "
+    "Каждая постановка проверяется математически, прежде чем попасть к преподавателю."
 )
 
 with st.sidebar:
-    st.header("Параметры генерации")
+    st.subheader("Параметры")
     track_ru = st.selectbox("Направление", list(TRACK_LABELS.keys()))
     lab_number = st.selectbox(
         "Лабораторная работа",
         [1, 2, 3, 4],
         format_func=lambda n: f"№{n}",
     )
-    generate_clicked = st.button("✨ Сгенерировать задачу", use_container_width=True)
+    generate_clicked = st.button(
+        "Сгенерировать задачу",
+        icon=":material/auto_awesome:",
+        use_container_width=True,
+    )
     st.divider()
     st.caption(
-        "Задача не попадёт к студенту без автоматической проверки: "
-        "существование точек покоя, классификация по Якобиану, "
-        "численная устойчивость схемы."
+        "Проверяются: существование точек покоя, тип точки покоя "
+        "(узел, седло, фокус, центр), устойчивость численного решения."
     )
 
 
@@ -67,9 +87,7 @@ def render_problem(raw: dict) -> None:
     variables = system.get("variables", [])
 
     st.subheader(raw.get("title", "Без названия"))
-    badge_col1, badge_col2 = st.columns(2)
-    badge_col1.metric("Направление", track_ru.split(" ", 1)[-1])
-    badge_col2.metric("Лабораторная работа", f"№{raw.get('lab_number', '?')}")
+    st.caption(f"{track_ru} · Лабораторная работа №{raw.get('lab_number', '?')}")
 
     if raw.get("narrative"):
         st.markdown(f"> {raw['narrative']}")
@@ -101,7 +119,7 @@ def render_problem(raw: dict) -> None:
                 }
             )
 
-    with st.expander("Полный JSON-ответ модели"):
+    with st.expander("Полные данные"):
         st.json(raw)
 
 
@@ -123,18 +141,19 @@ if generate_clicked:
         result = verify(raw)
 
     if result.accepted:
-        st.success("✅ Задача прошла автоматическую проверку")
+        st.success("Задача прошла проверку", icon=":material/check_circle:")
         render_problem(raw)
     else:
-        st.error("❌ Задача отклонена автоматической проверкой")
+        st.error("Задача отклонена проверкой", icon=":material/cancel:")
         for reason in result.reasons:
-            st.write(f"— {reason}")
-        with st.expander("Полный JSON-ответ модели (отклонено)"):
+            st.write(reason)
+        with st.expander("Полные данные (отклонено)"):
             st.json(raw)
 else:
     st.info(
-        "Выберите направление и лабораторную работу в панели слева, затем "
-        "нажмите «Сгенерировать задачу». Инструмент покажет сгенерированную "
-        "систему уравнений, параметры и заявленные точки покоя — либо "
-        "причину отбраковки, если верификация её не пропустила."
+        "Выберите направление и лабораторную работу слева, затем нажмите "
+        "«Сгенерировать задачу». Вы увидите систему уравнений, параметры и "
+        "заявленные точки покоя — либо причину отбраковки, если задача не "
+        "прошла проверку.",
+        icon=":material/info:",
     )
