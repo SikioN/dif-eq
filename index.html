@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МатКонтекст</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});">
+</script>
+<style>
+  :root {
+    --primary: #2F3A4C;
+    --bg: #FFFFFF;
+    --bg-secondary: #F7F7F8;
+    --text: #1A1A1A;
+    --text-muted: #6B6B6F;
+    --border: #E3E3E6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .banner {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+  }
+  h1 { font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+  .lede { color: var(--text-muted); margin-bottom: 2.5rem; }
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; }
+  @media (max-width: 680px) { .layout { grid-template-columns: 1fr; } }
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem;
+    align-self: start;
+  }
+  .panel h2 { font-size: 0.95rem; font-weight: 600; margin: 0 0 1rem; }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .field .value {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    background: var(--bg);
+  }
+  .btn {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    width: 100%;
+  }
+  .btn.secondary {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+  .caption { font-size: 0.8rem; color: var(--text-muted); }
+  .result h2 { font-size: 1.15rem; margin-bottom: 0.2rem; }
+  .result .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  blockquote {
+    border-left: 2px solid var(--primary);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: #4A4A4A;
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+  @media (max-width: 680px) { .cols { grid-template-columns: 1fr; } }
+  .cols h3 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  th, td { border: 1px solid var(--border); padding: 0.35rem 0.5rem; text-align: left; }
+  th { background: var(--bg-secondary); font-weight: 600; }
+  .example-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+  }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+  footer a { color: var(--primary); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="banner">
+    Статическая демонстрация интерфейса. Показанная ниже постановка — реальный пример
+    из опубликованного силлабуса курса (Приложение А.2), а не результат живого запуска
+    генератора. Рабочий интерфейс — Python-приложение, его нельзя разместить на
+    статичной странице; как запустить его по-настоящему — см.
+    <a href="https://github.com/SikioN/dif-eq/blob/main/README.md">README репозитория</a>.
+  </div>
+
+  <h1>МатКонтекст</h1>
+  <p class="lede">
+    Генератор профильных учебных задач для курса «Дифференциальные уравнения».
+    Каждая постановка проверяется математически, прежде чем попасть к преподавателю.
+  </p>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Параметры</h2>
+      <div class="field">
+        <label>Направление</label>
+        <div class="value">Мехатроника и робототехника</div>
+      </div>
+      <div class="field">
+        <label>Лабораторная работа</label>
+        <div class="value">№2</div>
+      </div>
+      <a class="btn" href="https://github.com/SikioN/dif-eq" style="pointer-events:none; opacity:0.5;">Сгенерировать задачу</a>
+      <hr class="divider">
+      <p class="caption">
+        Проверяются: существование точек покоя, тип точки покоя
+        (узел, седло, фокус, центр), устойчивость численного решения.
+      </p>
+    </div>
+
+    <div class="result">
+      <p class="example-label">Пример постановки</p>
+      <h2>Линеаризация роторного маятника</h2>
+      <p class="meta">Мехатроника и робототехника &middot; Лабораторная работа №2</p>
+      <blockquote>
+        Расчёт динамики роторного маятника манипулятора и классификация его положений
+        равновесия для анализа устойчивости при остановке привода.
+      </blockquote>
+
+      <div class="cols">
+        <div>
+          <h3>Система уравнений</h3>
+          <p>$\dot{\theta} = \omega$</p>
+          <p>$\dot{\omega} = -\gamma\,\omega - \omega_0^2 \sin\theta$</p>
+          <table>
+            <tr><th>параметр</th><th>значение</th></tr>
+            <tr><td>$\gamma$</td><td>0.5</td></tr>
+            <tr><td>$\omega_0$</td><td>2.0</td></tr>
+          </table>
+        </div>
+        <div>
+          <h3>Заявленные точки покоя</h3>
+          <table>
+            <tr><th>точка</th><th>тип</th></tr>
+            <tr><td>(0, 0)</td><td>устойчивый фокус</td></tr>
+            <tr><td>($\pi$, 0)</td><td>седло</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Исходный код инструмента, промпт-шаблоны и верификатор —
+    <a href="https://github.com/SikioN/dif-eq">github.com/SikioN/dif-eq</a>.
+    Инструкция по запуску рабочего интерфейса — в README репозитория.
+  </footer>
+
+</div>
+</body>
+</html>
