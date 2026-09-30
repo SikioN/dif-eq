@@ -6,9 +6,7 @@
 <title>МатКонтекст</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});">
-</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <style>
   :root {
     --primary: #2F3A4C;
@@ -26,7 +24,7 @@
     background: var(--bg);
     line-height: 1.55;
   }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
   .banner {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
@@ -36,56 +34,47 @@
     font-size: 0.9rem;
     margin-bottom: 2.5rem;
   }
+  .banner a { color: var(--primary); }
   h1 { font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
   .lede { color: var(--text-muted); margin-bottom: 2.5rem; }
-  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; }
+  .layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; }
   @media (max-width: 680px) { .layout { grid-template-columns: 1fr; } }
   .panel {
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 1rem;
     align-self: start;
+    position: sticky;
+    top: 1.5rem;
   }
   .panel h2 { font-size: 0.95rem; font-weight: 600; margin: 0 0 1rem; }
   .field { margin-bottom: 1rem; }
   .field label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-  .field .value {
+  select {
+    width: 100%;
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 0.4rem 0.6rem;
+    padding: 0.45rem 0.6rem;
     font-size: 0.9rem;
-    background: var(--bg);
-  }
-  .btn {
-    display: inline-block;
-    background: var(--primary);
-    color: #fff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    text-align: center;
-    width: 100%;
-  }
-  .btn.secondary {
+    font-family: inherit;
     background: var(--bg);
     color: var(--text);
-    border: 1px solid var(--border);
   }
   .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
   .caption { font-size: 0.8rem; color: var(--text-muted); }
   .result h2 { font-size: 1.15rem; margin-bottom: 0.2rem; }
   .result .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .base-task { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; }
   blockquote {
     border-left: 2px solid var(--primary);
     padding-left: 1rem;
     margin: 1rem 0;
     color: #4A4A4A;
   }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
-  @media (max-width: 680px) { .cols { grid-template-columns: 1fr; } }
-  .cols h3 { font-size: 0.9rem; margin-bottom: 0.5rem; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+  .formulas p { margin: 0.4rem 0; }
+  .eq-table { margin-top: 1rem; }
+  .eq-table h3 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+  table { border-collapse: collapse; width: 100%; max-width: 360px; font-size: 0.85rem; }
   th, td { border: 1px solid var(--border); padding: 0.35rem 0.5rem; text-align: left; }
   th { background: var(--bg-secondary); font-weight: 600; }
   .example-label {
@@ -103,11 +92,11 @@
 <div class="wrap">
 
   <div class="banner">
-    Статическая демонстрация интерфейса. Показанная ниже постановка — реальный пример
-    из опубликованного силлабуса курса (Приложение А.2), а не результат живого запуска
-    генератора. Рабочий интерфейс — Python-приложение, его нельзя разместить на
-    статичной странице; как запустить его по-настоящему — см.
-    <a href="https://github.com/SikioN/dif-eq/blob/main/README.md">README репозитория</a>.
+    Демонстрация интерфейса МатКонтекст. Ниже — постановки из силлабуса курса
+    (<a href="https://github.com/SikioN/dif-eq/blob/main/syl.pdf">Приложение А</a>)
+    для всех девяти направлений и четырёх лабораторных работ. Исходный код,
+    промпт-шаблоны и верификатор — в
+    <a href="https://github.com/SikioN/dif-eq">репозитории</a>.
   </div>
 
   <h1>МатКонтекст</h1>
@@ -120,14 +109,13 @@
     <div class="panel">
       <h2>Параметры</h2>
       <div class="field">
-        <label>Направление</label>
-        <div class="value">Мехатроника и робототехника</div>
+        <label for="track">Направление</label>
+        <select id="track"></select>
       </div>
       <div class="field">
-        <label>Лабораторная работа</label>
-        <div class="value">№2</div>
+        <label for="lab">Лабораторная работа</label>
+        <select id="lab"></select>
       </div>
-      <a class="btn" href="https://github.com/SikioN/dif-eq" style="pointer-events:none; opacity:0.5;">Сгенерировать задачу</a>
       <hr class="divider">
       <p class="caption">
         Проверяются: существование точек покоя, тип точки покоя
@@ -137,33 +125,7 @@
 
     <div class="result">
       <p class="example-label">Пример постановки</p>
-      <h2>Линеаризация роторного маятника</h2>
-      <p class="meta">Мехатроника и робототехника &middot; Лабораторная работа №2</p>
-      <blockquote>
-        Расчёт динамики роторного маятника манипулятора и классификация его положений
-        равновесия для анализа устойчивости при остановке привода.
-      </blockquote>
-
-      <div class="cols">
-        <div>
-          <h3>Система уравнений</h3>
-          <p>$\dot{\theta} = \omega$</p>
-          <p>$\dot{\omega} = -\gamma\,\omega - \omega_0^2 \sin\theta$</p>
-          <table>
-            <tr><th>параметр</th><th>значение</th></tr>
-            <tr><td>$\gamma$</td><td>0.5</td></tr>
-            <tr><td>$\omega_0$</td><td>2.0</td></tr>
-          </table>
-        </div>
-        <div>
-          <h3>Заявленные точки покоя</h3>
-          <table>
-            <tr><th>точка</th><th>тип</th></tr>
-            <tr><td>(0, 0)</td><td>устойчивый фокус</td></tr>
-            <tr><td>($\pi$, 0)</td><td>седло</td></tr>
-          </table>
-        </div>
-      </div>
+      <div id="output"></div>
     </div>
   </div>
 
@@ -174,5 +136,147 @@
   </footer>
 
 </div>
+
+<script>
+const LABS = {
+  1: "Численные методы ОДУ первого порядка: методы Эйлера и Рунге—Кутты 2-го порядка для задачи Коши.",
+  2: "Линеаризация и фазовые портреты: матрица Якоби, классификация точек покоя.",
+  3: "Теория хаоса и функции Ляпунова: чувствительность к начальным условиям, устойчивость нелинейных систем.",
+  4: "Вариационное исчисление и оптимизация: уравнение Эйлера—Лагранжа, дискретизация функционалов.",
+};
+
+const TRACKS = [
+  ["mechatronics", "Мехатроника и робототехника"],
+  ["infosec", "Информационная безопасность"],
+  ["applied_math", "Прикладная математика и информатика"],
+  ["software_eng_neuro", "Программная инженерия (Нейротехнологии)"],
+  ["applied_informatics_mobile", "Прикладная информатика (Мобильные технологии)"],
+  ["business_informatics", "Бизнес-информатика"],
+  ["innovation", "Технологии и инновации"],
+  ["bioengineering", "Биоинженерия"],
+  ["ecotech", "Экотехнологии и устойчивое развитие"],
+];
+
+// Content sourced verbatim from syl.tex, Приложение А.1-А.4.
+const DATA = {
+  mechatronics: {
+    1: { title: "Переходные процессы электропривода", description: "Численный расчёт переходных процессов скорости электропривода колёсного робота.", formulas: [String.raw`x'(t) = f(t, x(t))`] },
+    2: { title: "Линеаризация роторного маятника", description: "Динамика роторного маятника манипулятора, классификация положений равновесия при остановке привода.", formulas: [String.raw`\ddot{\theta} + \gamma\dot{\theta} + \omega_0^2\sin\theta = 0`], equilibria: [["(0, 0)", "устойчивый фокус"], ["(\\pi, 0)", "седло"]] },
+    3: { title: "Осциллятор Дуффинга", description: "Нелинейный осциллятор Дуффинга в задачах виброзащиты манипуляторов; возникновение странного аттрактора при нелинейном резонансе.", formulas: [String.raw`\ddot{x} + \delta \dot{x} + \alpha x + \beta x^3 = \gamma \cos(\omega t)`] },
+    4: { title: "Оптимизация траектории робота", description: "Минимизация функционала стоимости движения робота по рельефной поверхности методом градиентного спуска.", formulas: [String.raw`\mathcal{J}[y] = \int_{a}^{b} (A + B |\nabla h|) \sqrt{1 + (y')^2}\,dx + C \int_{a}^{b} (y'')^2\,dx \to \min`] },
+  },
+  infosec: {
+    1: { title: "Распределение ресурсов киберзащиты", description: "Численное решение уравнений динамического распределения ресурсов средств киберзащиты.", formulas: [String.raw`x'(t) = f(t, x(t))`] },
+    2: { title: "Генератор Чуа", description: "Фазовый портрет нелинейного хаотического генератора Чуа, анализ возникновения бифуркаций.", formulas: [String.raw`\dot{x} = \alpha(y - x - g(x))`, String.raw`\dot{y} = x - y + z`, String.raw`\dot{z} = -\beta y`] },
+    3: { title: "Аттрактор Лоренца и шифрование", description: "Моделирование аттрактора Лоренца и системы реакция—диффузия; проверка устойчивости через функцию Ляпунова; генерация ключа SHA-256 и XOR-шифрование.", formulas: [String.raw`\dot{x} = \sigma(y-x)`, String.raw`\dot{y} = x(\rho-z)-y`, String.raw`\dot{z} = xy-\beta z`] },
+    4: { title: "Оптимальное распределение мощности шифрования", description: "Минимизация риска утечки трафика при заданной мощности шифрования.", formulas: [String.raw`\mathcal{J}[P] = \int_0^T (\alpha\,Risk(t) + \beta P'(t)^2)\,dt \to \min`] },
+  },
+  applied_math: {
+    1: { title: "Жёсткие уравнения", description: "Анализ жёстких уравнений и оценка критериев численной устойчивости шага.", formulas: [String.raw`x'(t) = f(t, x(t)),\quad h_k`] },
+    2: { title: "Бифуркации вилки", description: "Анализ бифуркаций вилки в нелинейных динамических системах первого и второго порядков.", formulas: [String.raw`\dot{x} = \mu x - x^3`] },
+    3: { title: "Показатель Ляпунова хаоса Лоренца", description: "Вычисление наибольшего показателя Ляпунова для системы Лоренца и оценка фрактальной размерности странного аттрактора.", formulas: [String.raw`\lambda_{max} = \lim_{t\to\infty} \frac{1}{t}\ln\frac{\|\delta x(t)\|}{\|\delta x(0)\|}`] },
+    4: { title: "Геодезические линии", description: "Вариационная задача нахождения геодезических линий на римановых поверхностях, уравнение Эйлера—Лагранжа.", formulas: [String.raw`\mathcal{J}[y] = \int_a^b \sqrt{g_{11} + 2g_{12}y' + g_{22}(y')^2}\,dx \to \min`] },
+  },
+  software_eng_neuro: {
+    1: { title: "Сеть Хопфилда", description: "Непрерывная нейронная сеть Хопфилда для очистки цифровых изображений от шума и распознавания по тени.", formulas: [String.raw`\dot{x}_i = -\beta x_i + \mathrm{softmax}(Ax)_i`] },
+    2: { title: "Нейрон ФитцХью—Нагумо", description: "Модель импульсного нейрона; фазовая плоскость, кубическая изоклина, автоколебательный предельный цикл.", formulas: [String.raw`\dot{v} = v - v^3/3 - w + I`, String.raw`\dot{w} = \epsilon(v + a - bw)`] },
+    3: { title: "Reservoir Computing / Neural ODE", description: "Нелинейная динамика рекуррентных нейронных сетей; переход от стационарных состояний к хаосу.", formulas: [String.raw`\dot{x} = -\frac{1}{\tau}x + W \tanh(x) + W_{in}u`] },
+    4: { title: "Обучение Neural ODE", description: "Вариационный принцип обучения непрерывных Neural ODE методом сопряжённых состояний (Adjoint State Method).", formulas: [String.raw`\mathcal{J}[\theta] = L(x(T)) + \int_0^T R(x(t), \theta)\,dt`] },
+  },
+  applied_informatics_mobile: {
+    1: { title: "Очередь пакетов", description: "Моделирование динамики очереди пакетов в буфере мобильного маршрутизатора.", formulas: [String.raw`x'(t) = f(t, x(t))`] },
+    2: { title: "Загрузка каналов Ad-Hoc сетей", description: "Фазовые портреты динамики загрузки каналов связи в беспроводных Ad-Hoc сетях.", formulas: [String.raw`\dot{x} = f(x, y),\quad \dot{y} = g(x, y)`] },
+    3: { title: "Хаос задержек TCP", description: "Хаотические колебания задержек сетевых пакетов в протоколе TCP при управлении перегрузкой (Congestion Control).", formulas: [String.raw`x_{n+1} = f(x_n)`] },
+    4: { title: "Энергопотребление устройства", description: "Оптимизация расхода энергии аккумуляторов мобильных устройств при непрерывной передаче данных.", formulas: [String.raw`\mathcal{J}[P] = \int_0^T (P(t)^2 + \gamma \dot{P}(t)^2)\,dt \to \min`] },
+  },
+  business_informatics: {
+    1: { title: "Диффузия Басса и капитал компании", description: "Моделирование распространения продуктов по модели диффузии Басса и капитала компании; поиск момента максимального роста продаж.", formulas: [String.raw`\frac{dN(t)}{dt} = \left(p + q \frac{N(t)}{M}\right)(M - N(t))`, String.raw`\frac{dK}{dt} = I(t) - \delta K`] },
+    2: { title: "Модель Гудвина / Лотки—Вольтерры", description: "Модель рыночной конкуренции; линеаризация в окрестности экономических колебаний.", formulas: [String.raw`\dot{x} = x(\alpha - \beta y)`, String.raw`\dot{y} = -y(\gamma - \delta x)`], equilibria: [["(0, 0)", "седло"], ["(\\gamma/\\delta,\\ \\alpha/\\beta)", "центр"]] },
+    3: { title: "Биржевой хаос Гудвина—Мандрыкина", description: "Нелинейная модель детерминированного биржевого хаоса; построение аттракторов колебаний цен акций.", formulas: [String.raw`\dot{x} = f(x, y, z)`] },
+    4: { title: "Управление выпуском и запасами", description: "Оптимальное управление производственным выпуском и уровнем товарных запасов.", formulas: [String.raw`\mathcal{J}[u] = \int_0^T \left( c_1 (x(t) - x_{opt})^2 + c_2 u(t)^2 \right)\,dt \to \min`, String.raw`\dot{x} = u(t) - d(t)`] },
+  },
+  innovation: {
+    1: { title: "Накопление R&D-капитала", description: "Модель накопления знаниевого капитала (модель Гриличеса); поиск времени выхода на целевой уровень капитала.", formulas: [String.raw`\dot{K} = A I(t)^{\alpha} - \delta K`] },
+    2: { title: "Конкуренция технологий", description: "Конкуренция устоявшейся и прорывной технологий за долю рынка; классификация точки покоя в зависимости от параметров.", formulas: [String.raw`\dot{x} = x(r_1 - a_{11}x - a_{12}y)`, String.raw`\dot{y} = y(r_2 - a_{21}x - a_{22}y)`] },
+    3: { title: "Циклы венчурного финансирования", description: "Релаксационные колебания уровня доступного венчурного капитала; переход к хаотическому режиму при макроэкономическом возмущении.", formulas: [String.raw`\ddot{x} - \mu(1-x^2)\dot{x} + x = 0`] },
+    4: { title: "Оптимизация R&D-бюджета", description: "Оптимальное распределение R&D-бюджета во времени при достижении целевого уровня знаниевого капитала.", formulas: [String.raw`\mathcal{J}[u] = \int_0^T (c_1 u(t)^2 + c_2 (K(t) - K_{target})^2)\,dt \to \min`, String.raw`\dot{K} = u(t) - \delta K`] },
+  },
+  bioengineering: {
+    1: { title: "Фармакокинетика", description: "Однокамерная модель с элиминацией первого порядка и модель пероральной абсорбции; расчёт времени достижения терапевтического окна.", formulas: [String.raw`\dot{C} = -k_e C`, String.raw`\dot{C} = k_a D_0 e^{-k_a t} - k_e C`] },
+    2: { title: "Модель хемостата", description: "Линеаризация модели непрерывного биореактора с кинетикой Моно; классификация устойчивости в зависимости от скорости разбавления.", formulas: [String.raw`\dot{S} = D(S_{in}-S) - \mu(S)X/Y`, String.raw`\dot{X} = (\mu(S)-D)X`] },
+    3: { title: "Возбудимая мембрана", description: "Аналог модели ФитцХью—Нагумо для кардиомиоцита; чувствительность к начальным условиям при аритмическом режиме, устойчивость циркадного осциллятора.", formulas: [String.raw`\dot{v} = v - v^3/3 - w`] },
+    4: { title: "Схема дозирования препарата", description: "Оптимальная схема дозирования, минимизирующая токсичность при поддержании концентрации в терапевтическом окне.", formulas: [String.raw`\mathcal{J}[u] = \int_0^T (c_1(C(t)-C_{target})^2 + c_2 u(t)^2)\,dt \to \min`, String.raw`\dot{C} = u(t) - k_e C`] },
+  },
+  ecotech: {
+    1: { title: "Баланс загрязнителя", description: "Баланс массы загрязнителя в проточном водоёме (CSTR-модель); расчёт времени достижения предельно допустимой концентрации.", formulas: [String.raw`\dot{C} = \frac{Q}{V}(C_{in}-C) - kC`] },
+    2: { title: "Хищник—жертва", description: "Линеаризация классической модели «хищник—жертва»; устойчивость популяции при экологическом восстановлении.", formulas: [String.raw`\dot{x} = x(\alpha-\beta y)`, String.raw`\dot{y} = -y(\gamma-\delta x)`], equilibria: [["(0, 0)", "седло"], ["(\\gamma/\\delta,\\ \\alpha/\\beta)", "центр"]] },
+    3: { title: "Пищевая цепь Хастингса—Пауэлла", description: "Хаотическая динамика трёхвидовой пищевой цепи; наибольший показатель Ляпунова как индикатор коллапса экосистемы.", formulas: [String.raw`\dot{x} = f(x, y, z)`] },
+    4: { title: "Устойчивый промысел (модель Кларка)", description: "Максимизация дисконтированной прибыли при ограничении на восстановление популяции.", formulas: [String.raw`\mathcal{J}[u] = \int_0^T e^{-\delta t}(p - c/x(t))u(t)\,dt \to \max`, String.raw`\dot{x} = rx(1-x/K) - u(t)`] },
+  },
+};
+
+const trackSelect = document.getElementById("track");
+const labSelect = document.getElementById("lab");
+const output = document.getElementById("output");
+
+for (const [id, name] of TRACKS) {
+  const opt = document.createElement("option");
+  opt.value = id;
+  opt.textContent = name;
+  trackSelect.appendChild(opt);
+}
+for (const n of [1, 2, 3, 4]) {
+  const opt = document.createElement("option");
+  opt.value = n;
+  opt.textContent = "№" + n;
+  labSelect.appendChild(opt);
+}
+
+function trackName(id) {
+  return TRACKS.find(([t]) => t === id)[1];
+}
+
+function render() {
+  const track = trackSelect.value;
+  const lab = labSelect.value;
+  const entry = DATA[track][lab];
+
+  let equilibriaHtml = "";
+  if (entry.equilibria) {
+    const rows = entry.equilibria.map(
+      ([point, type]) => `<tr><td>$${point}$</td><td>${type}</td></tr>`
+    ).join("");
+    equilibriaHtml = `
+      <div class="eq-table">
+        <h3>Заявленные точки покоя</h3>
+        <table><tr><th>точка</th><th>тип</th></tr>${rows}</table>
+      </div>`;
+  }
+
+  const formulasHtml = entry.formulas.map((f) => `<p>$$${f}$$</p>`).join("");
+
+  output.innerHTML = `
+    <h2>${entry.title}</h2>
+    <p class="meta">${trackName(track)} &middot; Лабораторная работа №${lab}</p>
+    <p class="base-task">${LABS[lab]}</p>
+    <blockquote>${entry.description}</blockquote>
+    <div class="formulas">${formulasHtml}</div>
+    ${equilibriaHtml}
+  `;
+
+  if (window.renderMathInElement) {
+    renderMathInElement(output, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+      ],
+    });
+  }
+}
+
+trackSelect.addEventListener("change", render);
+labSelect.addEventListener("change", render);
+window.addEventListener("load", render);
+</script>
 </body>
 </html>
